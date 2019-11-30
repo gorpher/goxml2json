@@ -10,7 +10,7 @@ before_install:
   go mod tidy && go test -v ./
 
 script:
-  - ./test.sh
+  - ./go.test.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
