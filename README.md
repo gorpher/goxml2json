@@ -1,14 +1,22 @@
-# goxml2json [![CircleCI](https://circleci.com/gh/basgys/goxml2json.svg?style=svg)](https://circleci.com/gh/basgys/goxml2json)
+# goxml2json
+
+[![Build Status](https://secure.travis-ci.org/gorpher/goxml2json.png?branch=master)](http://travis-ci.org/gorpher/goxml2json)
+[![GoDoc Status](https://godoc.org/github.com/gorpher/goxml2json?status.svg)](https://godoc.org/github.com/gorpher/goxml2json)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gorpher/goxml2json)](https://goreportcard.com/report/github.com/gorpher/goxml2json)
+[![codecov](https://codecov.io/gh/gorpher/goxml2json/branch/master/graph/badge.svg)](https://codecov.io/gh/gorpher/goxml2json)
+[![Sourcegraph](https://sourcegraph.com/github.com/gorpher/goxml2json/-/badge.svg)](https://sourcegraph.com/github.com/gorpher/goxml2json?badge)
+[![Open Source Helpers](https://www.codetriage.com/gorpher/goxml2json/badges/users.svg)](https://www.codetriage.com/gorpher/goxml2json)
+[![CircleCI](https://circleci.com/gh/gorpher/goxml2json.svg?style=svg)](https://circleci.com/gh/gorpher/goxml2json)
 
 Go package that converts XML to JSON
 
 ### Install
 
-    go get -u github.com/basgys/goxml2json
+    go get -u github.com/gorpher/goxml2json
 
 ### Importing
 
-    import github.com/basgys/goxml2json
+    import github.com/gorpher/goxml2json
 
 ### Usage
 
@@ -21,7 +29,7 @@ Go package that converts XML to JSON
   	"fmt"
   	"strings"
 
-  	xj "github.com/basgys/goxml2json"
+  	xj "github.com/gorpher/goxml2json"
   )
 
   func main() {
@@ -75,7 +83,7 @@ Go package that converts XML to JSON
   	"fmt"
   	"strings"
 
-  	xj "github.com/basgys/goxml2json"
+  	xj "github.com/gorpher/goxml2json"
   )
 
   func main() {

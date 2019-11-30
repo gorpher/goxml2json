@@ -33,7 +33,7 @@ func (enc *Encoder) Encode(root *Node) error {
 		return nil
 	}
 
-	enc.err = enc.format(root, 0)
+	enc.format(root, 0)
 
 	// Terminate each value with a newline.
 	// This makes the output look a little nicer
@@ -46,7 +46,7 @@ func (enc *Encoder) Encode(root *Node) error {
 	return enc.err
 }
 
-func (enc *Encoder) format(n *Node, lvl int) error {
+func (enc *Encoder) format(n *Node, lvl int) {
 	if n.IsComplex() {
 		enc.write("{")
 
@@ -100,12 +100,10 @@ func (enc *Encoder) format(n *Node, lvl int) error {
 		enc.write(s)
 
 	}
-
-	return nil
 }
 
 func (enc *Encoder) write(s string) {
-	enc.w.Write([]byte(s))
+	enc.w.Write([]byte(s)) //nolint
 }
 
 // https://golang.org/src/encoding/json/encode.go?s=5584:5627#L788
@@ -114,7 +112,7 @@ var hex = "0123456789abcdef"
 func sanitiseString(s string) string {
 	var buf bytes.Buffer
 
-	buf.WriteByte('"')
+	buf.WriteByte('"') //nolint
 
 	start := 0
 	for i := 0; i < len(s); {
@@ -124,29 +122,29 @@ func sanitiseString(s string) string {
 				continue
 			}
 			if start < i {
-				buf.WriteString(s[start:i])
+				buf.WriteString(s[start:i]) //nolint
 			}
 			switch b {
 			case '\\', '"':
-				buf.WriteByte('\\')
-				buf.WriteByte(b)
+				buf.WriteByte('\\') //nolint
+				buf.WriteByte(b)    //nolint
 			case '\n':
-				buf.WriteByte('\\')
-				buf.WriteByte('n')
+				buf.WriteByte('\\') //nolint
+				buf.WriteByte('n')  //nolint
 			case '\r':
-				buf.WriteByte('\\')
-				buf.WriteByte('r')
+				buf.WriteByte('\\') //nolint
+				buf.WriteByte('r')  //nolint
 			case '\t':
-				buf.WriteByte('\\')
-				buf.WriteByte('t')
+				buf.WriteByte('\\') //nolint
+				buf.WriteByte('t')  //nolint
 			default:
 				// This encodes bytes < 0x20 except for \n and \r,
 				// as well as <, > and &. The latter are escaped because they
 				// can lead to security holes when user-controlled strings
 				// are rendered into JSON and served to some browsers.
-				buf.WriteString(`\u00`)
-				buf.WriteByte(hex[b>>4])
-				buf.WriteByte(hex[b&0xF])
+				buf.WriteString(`\u00`)   //nolint
+				buf.WriteByte(hex[b>>4])  //nolint
+				buf.WriteByte(hex[b&0xF]) //nolint
 			}
 			i++
 			start = i
@@ -155,9 +153,9 @@ func sanitiseString(s string) string {
 		c, size := utf8.DecodeRuneInString(s[i:])
 		if c == utf8.RuneError && size == 1 {
 			if start < i {
-				buf.WriteString(s[start:i])
+				buf.WriteString(s[start:i]) //nolint
 			}
-			buf.WriteString(`\ufffd`)
+			buf.WriteString(`\ufffd`) //nolint
 			i += size
 			start = i
 			continue
@@ -171,10 +169,10 @@ func sanitiseString(s string) string {
 		// See http://timelessrepo.com/json-isnt-a-javascript-subset for discussion.
 		if c == '\u2028' || c == '\u2029' {
 			if start < i {
-				buf.WriteString(s[start:i])
+				buf.WriteString(s[start:i]) //nolint
 			}
-			buf.WriteString(`\u202`)
-			buf.WriteByte(hex[c&0xF])
+			buf.WriteString(`\u202`)  //nolint
+			buf.WriteByte(hex[c&0xF]) //nolint
 			i += size
 			start = i
 			continue
@@ -182,10 +180,10 @@ func sanitiseString(s string) string {
 		i += size
 	}
 	if start < len(s) {
-		buf.WriteString(s[start:])
+		buf.WriteString(s[start:]) //nolint
 	}
 
-	buf.WriteByte('"')
+	buf.WriteByte('"') //nolint
 
 	return buf.String()
 }

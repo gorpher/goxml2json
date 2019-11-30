@@ -16,7 +16,6 @@ const (
 // A Decoder reads and decodes XML objects from an input stream.
 type Decoder struct {
 	r               io.Reader
-	err             error
 	attributePrefix string
 	contentPrefix   string
 	excludeAttrs    map[string]bool
@@ -77,8 +76,8 @@ func (dec *Decoder) Decode(root *Node) error {
 	}
 
 	for {
-		t, _ := xmlDec.Token()
-		if t == nil {
+		t, err := xmlDec.Token()
+		if t == nil || err != nil {
 			break
 		}
 
@@ -92,15 +91,15 @@ func (dec *Decoder) Decode(root *Node) error {
 			}
 
 			// Extract attributes as children
-			for _, a := range se.Attr {
-				if _, ok := dec.excludeAttrs[a.Name.Local]; ok {
+			for a := range se.Attr {
+				if _, ok := dec.excludeAttrs[se.Attr[a].Name.Local]; ok {
 					continue
 				}
-				elem.n.AddChild(dec.attributePrefix+a.Name.Local, &Node{Data: a.Value})
+				elem.n.AddChild(dec.attributePrefix+se.Attr[a].Name.Local, &Node{Data: se.Attr[a].Value})
 			}
 		case xml.CharData:
 			// Extract XML data (if any)
-			elem.n.Data = trimNonGraphic(string(xml.CharData(se)))
+			elem.n.Data = trimNonGraphic(string(se))
 		case xml.EndElement:
 			// And add it to its parent list
 			if elem.parent != nil {
@@ -112,8 +111,8 @@ func (dec *Decoder) Decode(root *Node) error {
 		}
 	}
 
-	for _, formatter := range dec.formatters {
-		formatter.Format(root)
+	for k := range dec.formatters {
+		dec.formatters[k].Format(root)
 	}
 
 	return nil
